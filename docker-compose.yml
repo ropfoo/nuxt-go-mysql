@@ -1,0 +1,32 @@
+version: '3'
+services:
+  client:
+    build:
+      context: ./client
+    container_name: nuxt-app
+    ports:
+      - '3000:3000'
+  go:
+    build:
+      context: ./go
+    container_name: go-app
+    ports:
+      - '8090:8090'
+    tty: true
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./db
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'secret123'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'secret'
+    volumes:
+      - my-datavolume:/var/lib/mysql
+    ports:
+      - '3306:3306'
+volumes:
+  my-datavolume:
